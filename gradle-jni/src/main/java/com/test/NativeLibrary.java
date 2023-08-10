@@ -1,4 +1,4 @@
-package io.github.lizhangqu;
+package com.test;
 
 
 import java.io.File;
@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 final class NativeLibrary {
     private static final boolean DEBUG = true;
-    private static final String PACKAGENAME = "io/github/lizhangqu/";
+    private static final String PACKAGENAME = "com/test/";
     private static final String LIBNAME = "bridge";
 
     public static void load() {
@@ -98,7 +98,7 @@ final class NativeLibrary {
 
     private static void log(String msg) {
         if (DEBUG) {
-            System.err.println("io.github.lizhangqu.NativeLibrary: " + msg);
+            System.err.println("NativeLibrary: " + msg);
         }
     }
 

@@ -1,4 +1,4 @@
-package io.github.lizhangqu;
+package com.test;
 
 public class JniBridge {
 
@@ -7,6 +7,8 @@ public class JniBridge {
     }
 
     public static native int version();
+
+    public static native int build();
 
     public static native long[] nativeCalculateSquares(long[] values, int numValue);
 
