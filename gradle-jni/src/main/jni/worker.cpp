@@ -41,7 +41,8 @@ Worker::~Worker() {
 }
 
 void Worker::runWorkload(long iter) {
-  info_log->Logv(0, ("test" + std::to_string(iter)).c_str());
+//  info_log->Logv(0, ("test" + std::to_string(iter)).c_str());
+  info_log->attach_then_detach();
   return;
 }
 

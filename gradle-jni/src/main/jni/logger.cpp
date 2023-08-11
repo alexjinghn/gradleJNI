@@ -122,11 +122,6 @@ void Logger::Logv(long should_log, const char* msg) {
   jboolean attached_thread = JNI_FALSE;
   JNIEnv* env = getJniEnv(&attached_thread);
   assert(env != nullptr);
-  if (should_log == 0) {
-    releaseJniEnv(attached_thread);
-    return;
-  }
-
   jstring jmsg = env->NewStringUTF(msg);
   if (jmsg == nullptr) {
     // unable to construct string
@@ -157,6 +152,14 @@ void Logger::Logv(long should_log, const char* msg) {
   env->DeleteLocalRef(jmsg);
   releaseJniEnv(attached_thread);
 }
+
+void Logger::attach_then_detach() {
+  jboolean attached_thread = JNI_FALSE;
+  JNIEnv* env = getJniEnv(&attached_thread);
+  assert(env != nullptr);
+  releaseJniEnv(attached_thread);
+}
+
 
 
 JNIEnv* Logger::getJniEnv(jboolean* attached) const {

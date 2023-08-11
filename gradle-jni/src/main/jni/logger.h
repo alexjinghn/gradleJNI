@@ -9,6 +9,7 @@ class Logger {
 
   const jobject& GetJavaObject() const { return m_jcallback_obj; }
   void Logv(long should_log, const char* msg);
+  void attach_then_detach();
 
  protected:
   JavaVM* m_jvm;
