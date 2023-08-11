@@ -14,6 +14,9 @@ public class Main {
         worker.setIteration(iteration);
         worker.run();
         System.out.println("number of ignored messages : " + logger.getIgnoredLogMessageCount());
+        if (logger.getIgnoredLogMessageCount() != iteration) {
+            System.out.println("Experiment failed!");
+        }
 //        worker.start();
 //        Thread.sleep(2000);
 //        worker.stop();
