@@ -55,7 +55,7 @@ final class NativeLibrary {
 
     private static boolean isLoaded() {
         try {
-            JniBridge.version();
+            JniWorker.version();
             log("isLoaded: true");
             return true;
         } catch (UnsatisfiedLinkError e) {

@@ -1,8 +1,10 @@
 package com.test;
 
 public class JniWorker extends JniObject{
+    static {
+        NativeLibrary.load();
+    }
 
-    private long nativeHandle;
     public JniWorker(long _nativeHandle) {
         nativeHandle = _nativeHandle;
     }
@@ -12,17 +14,34 @@ public class JniWorker extends JniObject{
     }
 
     private static native long newJniWorker();
+    private native void setLogger(long handle, long loggerHandle);
 
+    private native void setIteration(long handle, long iteration);
 
-    private native void setLogger(long handle,
-    long loggerHandle);
-	public native void start();
-    public native void stop();
+    private native void run(long handle);
+	private native void start(long handle);
+    private native void stop(long handle);
+
+    public static native int version();
 
     public void setLogger(JniLogger logger) {
         setLogger(nativeHandle, logger.nativeHandle);
     }
+    public void setIteration(long iteration) {
+        setIteration(nativeHandle, iteration);
+    }
 
+    public void run() {
+        run(nativeHandle);
+    }
+
+    public void start() {
+        start(nativeHandle);
+    }
+
+    public void stop() {
+        stop(nativeHandle);
+    }
 
     @Override
     public void close() {

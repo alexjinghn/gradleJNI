@@ -25,19 +25,43 @@ JNIEXPORT void JNICALL Java_com_test_JniWorker_setLogger
 
 /*
  * Class:     com_test_JniWorker
+ * Method:    setIteration
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_com_test_JniWorker_setIteration
+  (JNIEnv *, jobject, jlong, jlong);
+
+/*
+ * Class:     com_test_JniWorker
+ * Method:    run
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_test_JniWorker_run
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_test_JniWorker
  * Method:    start
- * Signature: ()V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_test_JniWorker_start
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     com_test_JniWorker
  * Method:    stop
- * Signature: ()V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_test_JniWorker_stop
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_test_JniWorker
+ * Method:    version
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_test_JniWorker_version
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }
