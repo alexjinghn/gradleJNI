@@ -2,6 +2,7 @@
 
 arg1="$1"
 arg2="$2"
+arg3="$3"
 
 JAVA_HOME=/usr/lib/jvm/zulu8-ca-amd64/ ./gradlew build
 #JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/ ./gradlew build
@@ -28,7 +29,7 @@ for ((i=1; i<=$arg1; i++)); do
   echo "iteration $i"
 #  output=$(/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
 
-  output=$(/usr/lib/jvm/zulu8-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
+  output=$(/usr/lib/jvm/zulu8-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 $arg3 2>1)
   number_of_messages=$(echo "$output" | grep 'number of ignored messages')
   echo $number_of_messages
   failed=$(echo "$output" | grep -oP 'Experiment failed!')
@@ -52,7 +53,7 @@ for ((i=1; i<=$arg1; i++)); do
 
 
 #  output=$(/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
-  output=$(/usr/lib/jvm/zulu17-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
+  output=$(/usr/lib/jvm/zulu17-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 $arg3 2>1)
   number_of_messages=$(echo "$output" | grep 'number of ignored messages')
   echo $number_of_messages
   failed=$(echo "$output" | grep -oP 'Experiment failed!')

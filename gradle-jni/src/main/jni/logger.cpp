@@ -122,6 +122,8 @@ void Logger::Logv(long should_log, const char* msg) {
   jboolean attached_thread = JNI_FALSE;
   JNIEnv* env = getJniEnv(&attached_thread);
   assert(env != nullptr);
+//  std::cout << "attach thread is " << (bool)(attached_thread == JNI_FALSE) << std::endl;
+//  assert((bool)(attached_thread == JNI_TRUE));
   jstring jmsg = env->NewStringUTF(msg);
   if (jmsg == nullptr) {
     // unable to construct string

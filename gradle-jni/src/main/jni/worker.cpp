@@ -34,19 +34,10 @@ long calculatePercentile(const std::vector<long>& data, double percentTile) {
     return sortedData[p99Index];
 }
 
-Worker::Worker(): stopFlag(false) {
+Worker::Worker() {
 }
 
 Worker::~Worker() {
-}
-
-void Worker::threadFunction() {
-  while (!stopFlag.load()) {
-    // Your thread's work here
-    std::cout << "Thread is running..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
-  std::cout << "Thread stopped." << std::endl;
 }
 
 void Worker::runWorkload(long iter) {
@@ -54,11 +45,8 @@ void Worker::runWorkload(long iter) {
   return;
 }
 
-void Worker::run() {
-    info_log->Logv(1, "running workload with iterations:");
-    info_log->Logv(1, std::to_string(iteration).c_str());
-
-    using std::chrono::high_resolution_clock;
+void Worker::innerRun() {
+using std::chrono::high_resolution_clock;
     using std::chrono::duration_cast;
     using std::chrono::duration;
     using std::chrono::microseconds;
@@ -95,33 +83,23 @@ void Worker::run() {
     info_log->Logv(1, ("Workload time taken p99 (nanoseconds): " + std::to_string(p99Value)).c_str());
     info_log->Logv(1, ("Workload time taken p95 (nanoseconds): " + std::to_string(p95Value)).c_str());
     info_log->Logv(1, ("Workload time taken p90 (nanoseconds): " + std::to_string(p90Value)).c_str());
-
-    return;
 }
 
-void Worker::start() {
-    info_log->Logv(1, "work started");
-    info_log->Logv(1, std::to_string(iteration).c_str());
-//    if (!isRunning()) {
-//      stopFlag.store(false);
-//      myThread = std::thread(&Worker::threadFunction, this);
-//    }
-    return;
-}
 
-void Worker::stop() {
-//    if (isRunning()) {
-//      stopFlag.store(true);
-//      if (myThread.joinable()) {
-//        try {
-//          myThread.join();
-//        } catch (const std::system_error& e) {
-//          // Handle exceptions that might occur during thread termination
-//          std::cerr << "Error while stopping thread: " << e.what() << std::endl;
-//        }
-//      }
-//    }
-    info_log->Logv(1, "work stopped");
+void Worker::run(bool async) {
+    if (async) {
+      info_log->Logv(1, "running work asynchronously");
+    } else {
+      info_log->Logv(1, "running work synchronously");
+    }
+    info_log->Logv(1, ("iterations: " + std::to_string(iteration)).c_str());
+
+    if (async) {
+       std::thread t(&Worker::innerRun, this);
+       t.join();
+    } else {
+      innerRun();
+    }
     return;
 }
 }

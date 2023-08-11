@@ -18,7 +18,7 @@ public class JniWorker extends JniObject{
 
     private native void setIteration(long handle, long iteration);
 
-    private native void run(long handle);
+    private native void run(long handle, long async);
 	private native void start(long handle);
     private native void stop(long handle);
 
@@ -31,8 +31,12 @@ public class JniWorker extends JniObject{
         setIteration(nativeHandle, iteration);
     }
 
-    public void run() {
-        run(nativeHandle);
+    public void run(boolean async) {
+        if (async) {
+            run(nativeHandle, 1);
+        } else {
+            run(nativeHandle, 0);
+        }
     }
 
     public void start() {

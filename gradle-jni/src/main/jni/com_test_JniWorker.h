@@ -34,10 +34,10 @@ JNIEXPORT void JNICALL Java_com_test_JniWorker_setIteration
 /*
  * Class:     com_test_JniWorker
  * Method:    run
- * Signature: (J)V
+ * Signature: (JJ)V
  */
 JNIEXPORT void JNICALL Java_com_test_JniWorker_run
-  (JNIEnv *, jobject, jlong);
+  (JNIEnv *, jobject, jlong, jlong);
 
 /*
  * Class:     com_test_JniWorker

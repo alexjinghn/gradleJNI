@@ -16,21 +16,11 @@ class Worker {
    std::shared_ptr<Logger> info_log;
    long iteration;
 
-   void run();
-   void start();
-   void stop();
-
-   bool isRunning() const {
-     return myThread.joinable();
-   }
+   void run(bool async);
 
  private:
-   std::atomic<bool> stopFlag;
-   std::thread myThread;
-
-   void threadFunction();
-
    void runWorkload(long iter);
+   void innerRun();
 };
 
 }
