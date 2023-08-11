@@ -25,11 +25,11 @@ double calculateStandardDeviation(const std::vector<long>& numbers, double mean)
     return std::sqrt(sumSquaredDiffs / numbers.size());
 }
 
-long calculateP99(const std::vector<long>& data) {
+long calculatePercentile(const std::vector<long>& data, double percentTile) {
     std::vector<long> sortedData = data;
     std::sort(sortedData.begin(), sortedData.end());
 
-    int p99Index = static_cast<int>(std::ceil(0.99 * sortedData.size())) - 1;
+    int p99Index = static_cast<int>(std::ceil(percentTile * sortedData.size())) - 1;
 
     return sortedData[p99Index];
 }
@@ -83,12 +83,17 @@ void Worker::run() {
     // Calculate the standard deviation
     double standardDeviation = calculateStandardDeviation(stats, mean);
 
-    long p99Value = calculateP99(stats);
+    long p99Value = calculatePercentile(stats, 0.99);
+    long p95Value = calculatePercentile(stats, 0.95);
+    long p90Value = calculatePercentile(stats, 0.9);
 
     info_log->Logv(1, ("Workload time taken (microseconds): " + std::to_string(total_duration.count())).c_str());
     info_log->Logv(1, ("Workload time taken mean (nanoseconds): " + std::to_string(mean)).c_str());
     info_log->Logv(1, ("Workload time taken sd (nanoseconds): " + std::to_string(standardDeviation)).c_str());
     info_log->Logv(1, ("Workload time taken p99 (nanoseconds): " + std::to_string(p99Value)).c_str());
+    info_log->Logv(1, ("Workload time taken p95 (nanoseconds): " + std::to_string(p95Value)).c_str());
+    info_log->Logv(1, ("Workload time taken p90 (nanoseconds): " + std::to_string(p90Value)).c_str());
+
     return;
 }
 
