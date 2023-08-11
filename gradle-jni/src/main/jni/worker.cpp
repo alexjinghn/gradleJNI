@@ -83,6 +83,7 @@ void Worker::run() {
     // Calculate the standard deviation
     double standardDeviation = calculateStandardDeviation(stats, mean);
 
+    long p999Value = calculatePercentile(stats, 0.999);
     long p99Value = calculatePercentile(stats, 0.99);
     long p95Value = calculatePercentile(stats, 0.95);
     long p90Value = calculatePercentile(stats, 0.9);
@@ -90,6 +91,7 @@ void Worker::run() {
     info_log->Logv(1, ("Workload time taken (microseconds): " + std::to_string(total_duration.count())).c_str());
     info_log->Logv(1, ("Workload time taken mean (nanoseconds): " + std::to_string(mean)).c_str());
     info_log->Logv(1, ("Workload time taken sd (nanoseconds): " + std::to_string(standardDeviation)).c_str());
+    info_log->Logv(1, ("Workload time taken p999 (nanoseconds): " + std::to_string(p999Value)).c_str());
     info_log->Logv(1, ("Workload time taken p99 (nanoseconds): " + std::to_string(p99Value)).c_str());
     info_log->Logv(1, ("Workload time taken p95 (nanoseconds): " + std::to_string(p95Value)).c_str());
     info_log->Logv(1, ("Workload time taken p90 (nanoseconds): " + std::to_string(p90Value)).c_str());
