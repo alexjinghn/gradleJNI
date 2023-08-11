@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("java version: " + System.getProperty("java.version"));
         System.out.println("jni version: " + JniWorker.version());
-        long iteration = 100000;
+        long iteration = Long.parseLong(args[0]);
         JniLogger logger = new JniLogger();
         JniWorker worker = JniWorker.createNewJniWorker();
         worker.setLogger(logger);
