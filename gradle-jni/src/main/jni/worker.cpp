@@ -24,6 +24,15 @@ double calculateStandardDeviation(const std::vector<long>& numbers, double mean)
     return std::sqrt(sumSquaredDiffs / numbers.size());
 }
 
+long calculateP99(const std::vector<long>& data) {
+    std::vector<long> sortedData = data;
+    std::sort(sortedData.begin(), sortedData.end());
+
+    int p99Index = static_cast<int>(std::ceil(0.99 * sortedData.size())) - 1;
+
+    return sortedData[p99Index];
+}
+
 Worker::Worker(): stopFlag(false) {
 }
 
@@ -45,7 +54,7 @@ void Worker::runWorkload(long iter) {
 }
 
 void Worker::run() {
-    info_log->Logv(1, "running workload...");
+    info_log->Logv(1, "running workload with iterations:");
     info_log->Logv(1, std::to_string(iteration).c_str());
 
     using std::chrono::high_resolution_clock;
@@ -55,6 +64,7 @@ void Worker::run() {
     using std::chrono::nanoseconds;
 
     std::vector<long> stats;
+    info_log->Logv(1, "start running workload....");
     auto start = high_resolution_clock::now();
     for (long i = 0; i < iteration; i ++) {
       auto t1 = high_resolution_clock::now();
@@ -64,15 +74,20 @@ void Worker::run() {
       stats.push_back(ms_int.count());
     }
     auto end = high_resolution_clock::now();
+    info_log->Logv(1, "finished running workload, calculating stats");
+
     auto total_duration = duration_cast<microseconds>(end - start);
     double mean = calculateMean(stats);
 
     // Calculate the standard deviation
     double standardDeviation = calculateStandardDeviation(stats, mean);
 
+    long p99Value = calculateP99(stats);
+
     info_log->Logv(1, ("Workload time taken (microseconds): " + std::to_string(total_duration.count())).c_str());
     info_log->Logv(1, ("Workload time taken mean (nanoseconds): " + std::to_string(mean)).c_str());
     info_log->Logv(1, ("Workload time taken sd (nanoseconds): " + std::to_string(standardDeviation)).c_str());
+    info_log->Logv(1, ("Workload time taken p99 (nanoseconds): " + std::to_string(p99Value)).c_str());
     return;
 }
 
