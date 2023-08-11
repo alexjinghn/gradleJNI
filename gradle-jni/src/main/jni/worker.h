@@ -30,7 +30,7 @@ class Worker {
 
    void threadFunction();
 
-   void runWorkload();
+   void runWorkload(long iter);
 };
 
 }

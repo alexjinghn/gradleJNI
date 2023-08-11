@@ -1,8 +1,28 @@
 #include "worker.h"
 #include <string>
 #include <chrono>
+#include <vector>
+#include <cmath>
 
 namespace NATIVE_IMPL {
+
+
+double calculateMean(const std::vector<long>& numbers) {
+    long sum = 0;
+    for (const long& num : numbers) {
+        sum += num;
+    }
+    return static_cast<double>(sum) / numbers.size();
+}
+
+double calculateStandardDeviation(const std::vector<long>& numbers, double mean) {
+    double sumSquaredDiffs = 0.0;
+    for (const long& num : numbers) {
+        double diff = num - mean;
+        sumSquaredDiffs += diff * diff;
+    }
+    return std::sqrt(sumSquaredDiffs / numbers.size());
+}
 
 Worker::Worker(): stopFlag(false) {
 }
@@ -19,10 +39,8 @@ void Worker::threadFunction() {
   std::cout << "Thread stopped." << std::endl;
 }
 
-void Worker::runWorkload() {
-  for (long i = 0; i < iteration ; i++) {
-    info_log->Logv(0, ("test" + std::to_string(i)).c_str());
-  }
+void Worker::runWorkload(long iter) {
+  info_log->Logv(0, ("test" + std::to_string(iter)).c_str());
   return;
 }
 
@@ -34,14 +52,27 @@ void Worker::run() {
     using std::chrono::duration_cast;
     using std::chrono::duration;
     using std::chrono::microseconds;
+    using std::chrono::nanoseconds;
 
-    auto t1 = high_resolution_clock::now();
-    runWorkload();
-    auto t2 = high_resolution_clock::now();
+    std::vector<long> stats;
+    auto start = high_resolution_clock::now();
+    for (long i = 0; i < iteration; i ++) {
+      auto t1 = high_resolution_clock::now();
+      runWorkload(i);
+      auto t2 = high_resolution_clock::now();
+      auto ms_int = duration_cast<nanoseconds>(t2 - t1);
+      stats.push_back(ms_int.count());
+    }
+    auto end = high_resolution_clock::now();
+    auto total_duration = duration_cast<microseconds>(end - start);
+    double mean = calculateMean(stats);
 
-    auto ms_int = duration_cast<microseconds>(t2 - t1);
+    // Calculate the standard deviation
+    double standardDeviation = calculateStandardDeviation(stats, mean);
 
-    info_log->Logv(1, ("Workload time taken (microseconds): " + std::to_string(ms_int.count())).c_str());
+    info_log->Logv(1, ("Workload time taken (microseconds): " + std::to_string(total_duration.count())).c_str());
+    info_log->Logv(1, ("Workload time taken mean (nanoseconds): " + std::to_string(mean)).c_str());
+    info_log->Logv(1, ("Workload time taken sd (nanoseconds): " + std::to_string(standardDeviation)).c_str());
     return;
 }
 
