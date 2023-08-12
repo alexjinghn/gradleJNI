@@ -27,10 +27,6 @@ for ((i=1; i<=$arg1; i++)); do
   echo "iteration $i"
 
   output=$(/usr/lib/jvm/zulu8-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
-  number_of_messages=$(echo "$output" | grep 'number of ignored messages')
-  echo $number_of_messages
-  failed=$(echo "$output" | grep -oP 'Experiment failed!')
-  echo $failed
   time_taken=$(echo "$output" | grep -oP '(?<=time taken \(microseconds\): )\d+')
   mean=$(echo "$output" | grep -oP '(?<=mean \(nanoseconds\): )\d+\.\d+')
   sd=$(echo "$output" | grep -oP '(?<=sd \(nanoseconds\): )\d+\.\d+')
@@ -50,10 +46,6 @@ for ((i=1; i<=$arg1; i++)); do
 
 
   output=$(/usr/lib/jvm/zulu17-ca-amd64/bin/java -XX:+UseParallelGC -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
-  number_of_messages=$(echo "$output" | grep 'number of ignored messages')
-  echo $number_of_messages
-  failed=$(echo "$output" | grep -oP 'Experiment failed!')
-  echo $failed
   time_taken=$(echo "$output" | grep -oP '(?<=time taken \(microseconds\): )\d+')
   mean=$(echo "$output" | grep -oP '(?<=mean \(nanoseconds\): )\d+\.\d+')
   sd=$(echo "$output" | grep -oP '(?<=sd \(nanoseconds\): )\d+\.\d+')
