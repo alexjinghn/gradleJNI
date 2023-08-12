@@ -31,7 +31,7 @@ JNIEXPORT void JNICALL Java_com_test_JniWorker_setIteration
 }
 
 JNIEXPORT void JNICALL Java_com_test_JniWorker_run
-  (JNIEnv * env, jobject jobj, jlong worker_handle, jlong async) {
-  reinterpret_cast<NATIVE_IMPL::Worker*>(worker_handle)->run((bool)(async == 1));
+  (JNIEnv * env, jobject jobj, jlong worker_handle) {
+  reinterpret_cast<NATIVE_IMPL::Worker*>(worker_handle)->run();
   return;
 }

@@ -1,6 +1,5 @@
 package com.test;
 
-public abstract class JniObject  implements AutoCloseable {
+public abstract class JniObject {
     protected long nativeHandle;
-    public abstract void close();
 }

@@ -16,11 +16,11 @@ class Worker {
    std::shared_ptr<Logger> info_log;
    long iteration;
 
-   void run(bool async);
+   void run();
 
  private:
-   void runWorkload(long iter);
    void innerRun();
+   void runWorkload();
 };
 
 }

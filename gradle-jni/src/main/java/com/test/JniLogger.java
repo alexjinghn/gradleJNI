@@ -24,9 +24,4 @@ public class JniLogger extends JniObject {
     public long getIgnoredLogMessageCount() {
         return counter.get();
     }
-
-    @Override
-    public void close() {
-        throw new UnsupportedOperationException("Unimplemented method 'close'");
-    }
 }
