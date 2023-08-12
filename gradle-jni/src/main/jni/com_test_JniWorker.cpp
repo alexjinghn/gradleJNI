@@ -4,7 +4,7 @@
 
 JNIEXPORT jint JNICALL Java_com_test_JniWorker_version
   (JNIEnv *, jclass) {
-    return 4;
+    return 1;
 }
 
 JNIEXPORT jlong JNICALL Java_com_test_JniWorker_newJniWorker

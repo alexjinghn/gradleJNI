@@ -2,7 +2,6 @@
 
 arg1="$1"
 arg2="$2"
-arg3="$3"
 
 JAVA_HOME=/usr/lib/jvm/zulu8-ca-amd64/ ./gradlew build
 
@@ -27,7 +26,7 @@ jdk17_p90_arr=()
 for ((i=1; i<=$arg1; i++)); do
   echo "iteration $i"
 
-  output=$(/usr/lib/jvm/zulu8-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 $arg3 2>1)
+  output=$(/usr/lib/jvm/zulu8-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
   number_of_messages=$(echo "$output" | grep 'number of ignored messages')
   echo $number_of_messages
   failed=$(echo "$output" | grep -oP 'Experiment failed!')
@@ -50,7 +49,7 @@ for ((i=1; i<=$arg1; i++)); do
 
 
 
-  output=$(/usr/lib/jvm/zulu17-ca-amd64/bin/java -XX:+UseParallelGC -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 $arg3 2>1)
+  output=$(/usr/lib/jvm/zulu17-ca-amd64/bin/java -XX:+UseParallelGC -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
   number_of_messages=$(echo "$output" | grep 'number of ignored messages')
   echo $number_of_messages
   failed=$(echo "$output" | grep -oP 'Experiment failed!')

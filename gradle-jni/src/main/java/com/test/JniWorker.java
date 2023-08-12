@@ -1,9 +1,11 @@
 package com.test;
 
-public class JniWorker extends JniObject{
+public class JniWorker {
     static {
         NativeLibrary.load();
     }
+
+    protected long nativeHandle;
 
     public JniWorker(long _nativeHandle) {
         nativeHandle = _nativeHandle;
