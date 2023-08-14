@@ -1,5 +1,8 @@
 package com.test;
 
+/**
+ * Java flyweight to native worker object
+ */
 public class JniWorker {
     static {
         NativeLibrary.load();

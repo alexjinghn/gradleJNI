@@ -1,7 +1,8 @@
 package com.test;
 
-import java.util.concurrent.atomic.AtomicLong;
-
+/**
+ * Java flyweight to native logger object
+ */
 public class JniLogger {
     protected long nativeHandle;
 

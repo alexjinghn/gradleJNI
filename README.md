@@ -14,6 +14,18 @@ git clone git@github.com:alexjinghn/gradleJNI.git
 benchmark.sh <num of runs> <iteration per run>
 ```
 
+# Repro walkthrough
+
+This repro is inspired by Rocksdb logging use case (https://github.com/facebook/rocksdb/blob/main/java/rocksjni/loggerjnicallback.h)
+ where there is a background native thread trying to log to JVM context. In doing so, the native background thread has to repeatedly attach and detach from the JVM.
+
+In this repro, we have a worker and a logger:
+
+* The worker drives the execution of a method (`attach_then_detach`) from logger in a loop and calculate the execution stats
+* To simulate the rocksdb behavior, the workload from worker is executed on a native thread (not the JNI calling thread)
+* The logger, instead of doing any actual logging, just attaches and detaches itself to the JVM from the native thread.
+
+
 # Benchmarking
 
 The script hardcodes the installation path for JDK8 and JDK11 as:
