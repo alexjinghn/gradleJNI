@@ -4,11 +4,17 @@ arg1="$1"
 arg2="$2"
 
 
-#JAVA_HOME_8=/usr/lib/jvm/java-8-openjdk-amd64
-#JAVA_HOME_17=/usr/lib/jvm/java-17-openjdk-amd64
+JAVA_HOME_8=/usr/lib/jvm/java-8-openjdk-amd64
+JAVA_HOME_17=/usr/lib/jvm/java-17-openjdk-amd64
 
-JAVA_HOME_8=/usr/lib/jvm/zulu8-ca-amd64
-JAVA_HOME_17=/usr/lib/jvm/zulu17-ca-amd64
+#JAVA_HOME_8=/usr/lib/jvm/zulu8-ca-amd64
+#JAVA_HOME_17=/usr/lib/jvm/zulu17-ca-amd64
+
+echo "-----------------------------------------------------------------"
+echo "Ubuntu version:"
+echo "-----------------------------------------------------------------"
+uname -a
+
 
 echo "-----------------------------------------------------------------"
 echo "JDK8 version:"
