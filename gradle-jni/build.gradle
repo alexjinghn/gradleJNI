@@ -12,9 +12,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-compileJava {
-  options.compilerArgs += ["-h", file("src/main/jni")]
-}
+//compileJava {
+//  options.compilerArgs += ["-h", file("src/main/jni")]
+//}
 
 def JAVA_HOME = System.getenv("JAVA_HOME")
 def jniLibName = "bridge"

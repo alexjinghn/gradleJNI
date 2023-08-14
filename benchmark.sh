@@ -2,10 +2,34 @@
 
 arg1="$1"
 arg2="$2"
-arg3="$3"
 
-JAVA_HOME=/usr/lib/jvm/zulu8-ca-amd64/ ./gradlew build
 
+#JAVA_HOME_8=/usr/lib/jvm/java-8-openjdk-amd64
+#JAVA_HOME_17=/usr/lib/jvm/java-17-openjdk-amd64
+
+JAVA_HOME_8=/usr/lib/jvm/zulu8-ca-amd64
+JAVA_HOME_17=/usr/lib/jvm/zulu17-ca-amd64
+
+echo "-----------------------------------------------------------------"
+echo "JDK8 version:"
+echo "-----------------------------------------------------------------"
+$JAVA_HOME_8/bin/java -version
+
+
+echo "-----------------------------------------------------------------"
+echo "JDK17 version:"
+echo "-----------------------------------------------------------------"
+$JAVA_HOME_17/bin/java -version
+
+echo "-----------------------------------------------------------------"
+echo "building libraries....."
+echo "-----------------------------------------------------------------"
+
+JAVA_HOME=$JAVA_HOME_8 ./gradlew build
+
+echo "-----------------------------------------------------------------"
+echo "start benchmarking...."
+echo "-----------------------------------------------------------------"
 
 jdk8_time_taken_arr=()
 jdk8_mean_arr=()
@@ -27,11 +51,8 @@ jdk17_p90_arr=()
 for ((i=1; i<=$arg1; i++)); do
   echo "iteration $i"
 
-  output=$(/usr/lib/jvm/zulu8-ca-amd64/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 $arg3 2>1)
-  number_of_messages=$(echo "$output" | grep 'number of ignored messages')
-  echo $number_of_messages
-  failed=$(echo "$output" | grep -oP 'Experiment failed!')
-  echo $failed
+  output=$($JAVA_HOME_8/bin/java -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
+
   time_taken=$(echo "$output" | grep -oP '(?<=time taken \(microseconds\): )\d+')
   mean=$(echo "$output" | grep -oP '(?<=mean \(nanoseconds\): )\d+\.\d+')
   sd=$(echo "$output" | grep -oP '(?<=sd \(nanoseconds\): )\d+\.\d+')
@@ -50,11 +71,8 @@ for ((i=1; i<=$arg1; i++)); do
 
 
 
-  output=$(/usr/lib/jvm/zulu17-ca-amd64/bin/java -XX:+UseParallelGC -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 $arg3 2>1)
-  number_of_messages=$(echo "$output" | grep 'number of ignored messages')
-  echo $number_of_messages
-  failed=$(echo "$output" | grep -oP 'Experiment failed!')
-  echo $failed
+  output=$($JAVA_HOME_17/bin/java -XX:+UseParallelGC -cp gradle-jni/build/libs/gradle-jni.jar com.test.Main $arg2 2>1)
+
   time_taken=$(echo "$output" | grep -oP '(?<=time taken \(microseconds\): )\d+')
   mean=$(echo "$output" | grep -oP '(?<=mean \(nanoseconds\): )\d+\.\d+')
   sd=$(echo "$output" | grep -oP '(?<=sd \(nanoseconds\): )\d+\.\d+')
@@ -80,3 +98,9 @@ for ((i = 0; i < ${#jdk8_time_taken_arr[@]}; i++)); do
     printf "jdk17 %-10s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s\n" "${jdk17_time_taken_arr[i]} μs" "${jdk17_mean_arr[i]} ns" "${jdk17_sd_arr[i]} ns" "${jdk17_p999_arr[i]} ns"  "${jdk17_p99_arr[i]} ns" "${jdk17_p95_arr[i]} ns" "${jdk17_p90_arr[i]} ns"
     echo "----------------------------------------"
 done
+
+
+echo "-----------------------------------------------------------------"
+echo "DONE!"
+echo "-----------------------------------------------------------------"
+

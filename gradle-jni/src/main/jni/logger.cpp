@@ -40,16 +40,6 @@ static JNIEnv* getJniEnvUtil(JavaVM* jvm, jboolean* attached) {
   }
 }
 
-/**
- * Counterpart to {@link JniUtil::getJniEnv(JavaVM*, jboolean*)}
- *
- * Detachess the current thread from the JVM if it was previously
- * attached
- *
- * @param jvm (IN) A pointer to the JavaVM instance
- * @param attached (IN) JNI_TRUE if we previously had to attach the thread
- *     to the JavaVM to get the JNIEnv
- */
 static void releaseJniEnvUtil(JavaVM* jvm, jboolean& attached) {
   assert(jvm != nullptr);
   if (attached == JNI_TRUE) {
@@ -61,25 +51,6 @@ static void releaseJniEnvUtil(JavaVM* jvm, jboolean& attached) {
                 << std::endl;
     }
   }
-}
-
-static jclass getJClass(JNIEnv* env) {
-  jclass jclazz = env->FindClass("com/test/JniLogger");
-  assert(jclazz != nullptr);
-  return jclazz;
-}
-
-static jmethodID getLogMethodId(JNIEnv* env) {
-  jclass jclazz = getJClass(env);
-  if (jclazz == nullptr) {
-    // exception occurred accessing class
-    return nullptr;
-  }
-
-  static jmethodID mid = env->GetMethodID(
-      jclazz, "log", "(JLjava/lang/String;)V");
-  assert(mid != nullptr);
-  return mid;
 }
 
 Logger::Logger(JNIEnv* env, jobject jcallback_obj) {
@@ -99,9 +70,6 @@ Logger::Logger(JNIEnv* env, jobject jcallback_obj) {
     // exception thrown: OutOfMemoryError
     return;
   }
-
-  m_jLogMethodId = getLogMethodId(env);
-  Logv(1, "native logger initialized");
 }
 
 Logger::~Logger() {
@@ -116,55 +84,19 @@ Logger::~Logger() {
   releaseJniEnv(attached_thread);
 }
 
-void Logger::Logv(long should_log, const char* msg) {
-
-  // pass msg to java callback handler
-  jboolean attached_thread = JNI_FALSE;
-  JNIEnv* env = getJniEnv(&attached_thread);
-  assert(env != nullptr);
-  if (should_log == 0) {
-    releaseJniEnv(attached_thread);
-    return;
-  }
-
-  jstring jmsg = env->NewStringUTF(msg);
-  if (jmsg == nullptr) {
-    // unable to construct string
-    if (env->ExceptionCheck()) {
-      env->ExceptionDescribe();  // print out exception to stderr
-    }
-    releaseJniEnv(attached_thread);
-    return;
-  }
-
-  if (env->ExceptionCheck()) {
-    // exception thrown: OutOfMemoryError
-    env->ExceptionDescribe();  // print out exception to stderr
-    env->DeleteLocalRef(jmsg);
-    releaseJniEnv(attached_thread);
-    return;
-  }
-
-  env->CallVoidMethod(m_jcallback_obj, m_jLogMethodId, (jlong) should_log, jmsg);
-  if (env->ExceptionCheck()) {
-    // exception thrown
-    env->ExceptionDescribe();  // print out exception to stderr
-    env->DeleteLocalRef(jmsg);
-    releaseJniEnv(attached_thread);
-    return;
-  }
-
-  env->DeleteLocalRef(jmsg);
-  releaseJniEnv(attached_thread);
-}
-
-
 JNIEnv* Logger::getJniEnv(jboolean* attached) const {
   return getJniEnvUtil(m_jvm, attached);
 }
 
 void Logger::releaseJniEnv(jboolean& attached) const {
   releaseJniEnvUtil(m_jvm, attached);
+}
+
+void Logger::attach_then_detach() {
+  jboolean attached_thread = JNI_FALSE;
+  JNIEnv* env = getJniEnv(&attached_thread);
+  assert(env != nullptr);
+  releaseJniEnv(attached_thread);
 }
 
 }
